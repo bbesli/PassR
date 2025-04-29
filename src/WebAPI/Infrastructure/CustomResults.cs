@@ -1,7 +1,7 @@
-﻿using Domain.Abstractions;
-using Domain.Shared;
+﻿using PassR.Domain.Abstractions;
+using PassR.Domain.Shared;
 
-namespace WebAPI.Infrastructure
+namespace PassR.WebAPI.Infrastructure
 {
     public static class CustomResults
     {

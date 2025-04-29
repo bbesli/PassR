@@ -1,6 +1,6 @@
 using System.Reflection;
-using WebAPI.Extenstions;
-using Infrastructure.Mediator;
+using PassR.Infrastructure.Mediator;
+using PassR.WebAPI.Extenstions;
 
 internal class Program
 {

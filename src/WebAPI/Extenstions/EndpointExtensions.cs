@@ -1,14 +1,14 @@
 ﻿using Microsoft.Extensions.DependencyInjection.Extensions;
+using PassR.WebAPI.Endpoints;
 using System.Reflection;
-using WebAPI.Endpoints;
 
-namespace WebAPI.Extenstions
+namespace PassR.WebAPI.Extenstions
 {
     public static class EndpointExtensions
     {
         public static IServiceCollection AddEndpoints(this IServiceCollection services, Assembly assembly)
         {
-            ServiceDescriptor[] serviceDescriptors = assembly
+            var serviceDescriptors = assembly
                 .DefinedTypes
                 .Where(type => type is { IsAbstract: false, IsInterface: false } &&
                                type.IsAssignableTo(typeof(IEndpoint)))
@@ -24,11 +24,11 @@ namespace WebAPI.Extenstions
             this WebApplication app,
             RouteGroupBuilder? routeGroupBuilder = null)
         {
-            IEnumerable<IEndpoint> endpoints = app.Services.GetRequiredService<IEnumerable<IEndpoint>>();
+            var endpoints = app.Services.GetRequiredService<IEnumerable<IEndpoint>>();
 
             IEndpointRouteBuilder builder = routeGroupBuilder is null ? app : routeGroupBuilder;
 
-            foreach (IEndpoint endpoint in endpoints)
+            foreach (var endpoint in endpoints)
             {
                 endpoint.MapEndpoint(builder);
             }

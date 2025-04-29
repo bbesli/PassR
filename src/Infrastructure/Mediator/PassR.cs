@@ -1,18 +1,32 @@
-﻿using Application.Abstractions;
-using Microsoft.Extensions.DependencyInjection;
-using Domain.Events;
+﻿using Microsoft.Extensions.DependencyInjection;
+using PassR.Application.Abstractions;
+using PassR.Domain.Events;
 
-namespace Infrastructure.Mediator
+namespace PassR.Infrastructure.Mediator
 {
+    /// <summary>
+    /// Default implementation of the <see cref="IPassR"/> interface.
+    /// 
+    /// <para>
+    /// PassR mediates communication between request senders and their corresponding handlers.
+    /// It supports request/response operations (<c>SendAsync</c>) and fire-and-forget notifications (<c>PublishAsync</c>),
+    /// with optional pipeline behaviors for cross-cutting concerns such as logging, validation, and caching.
+    /// </para>
+    /// </summary>
     public class PassR : IPassR
     {
         private readonly IServiceProvider _serviceProvider;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="PassR"/> class with the specified service provider.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider used to resolve handlers and pipeline behaviors.</param>
         public PassR(IServiceProvider serviceProvider)
         {
             _serviceProvider = serviceProvider;
         }
 
+        /// <inheritdoc />
         public async ValueTask<TResponse> SendAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
         {
             var handlerType = typeof(IRequestHandler<,>).MakeGenericType(request.GetType(), typeof(TResponse));
@@ -27,12 +41,13 @@ namespace Infrastructure.Mediator
             foreach (var behavior in behaviors)
             {
                 var next = handlerDelegate;
-                handlerDelegate = () => ((dynamic)behavior).HandleAsync((dynamic)request, cancellationToken, next);
+                handlerDelegate = () => behavior.HandleAsync((dynamic)request, cancellationToken, next);
             }
 
             return await handlerDelegate();
         }
 
+        /// <inheritdoc />
         public async ValueTask PublishAsync<TNotification>(TNotification notification, CancellationToken cancellationToken = default)
             where TNotification : INotification
         {

@@ -1,6 +1,6 @@
-﻿using Domain.Abstractions;
+﻿using PassR.Domain.Abstractions;
 
-namespace WebAPI.Extenstions
+namespace PassR.WebAPI.Extenstions
 {
     public static class ResultExtensions
     {

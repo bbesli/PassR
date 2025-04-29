@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Endpoints
+﻿namespace PassR.WebAPI.Endpoints
 {
     public class Tags
     {

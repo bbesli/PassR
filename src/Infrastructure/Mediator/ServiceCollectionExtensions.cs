@@ -1,11 +1,32 @@
-﻿using Application.Abstractions;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
+using PassR.Application.Abstractions;
 using System.Reflection;
 
-namespace Infrastructure.Mediator
+namespace PassR.Infrastructure.Mediator
 {
+    /// <summary>
+    /// Provides extension methods for registering PassR mediator services into an <see cref="IServiceCollection"/>.
+    /// </summary>
     public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Registers PassR mediator components, handlers, and pipeline behaviors into the dependency injection container.
+        /// 
+        /// <para>
+        /// Automatically scans assemblies for <see cref="IRequestHandler{TRequest, TResponse}"/> and <see cref="INotificationHandler{TNotification}"/>
+        /// implementations and registers them with the configured service lifetime.
+        /// </para>
+        /// 
+        /// <para>
+        /// Also allows registering custom open generic pipeline behaviors (e.g., logging, validation) via <see cref="PassROptions"/>.
+        /// </para>
+        /// </summary>
+        /// <param name="services">The service collection to add mediator services to.</param>
+        /// <param name="configure">
+        /// An optional configuration action to customize registration options
+        /// such as handler lifetime, assemblies to scan, and open behaviors.
+        /// </param>
+        /// <returns>The updated <see cref="IServiceCollection"/> for chaining.</returns>
         public static IServiceCollection AddPassR(this IServiceCollection services, Action<PassROptions>? configure = null)
         {
             var options = new PassROptions();

@@ -1,12 +1,11 @@
-﻿
-using Application.Abstractions;
-using Application.Messaging;
-using Domain.Abstractions;
-using Microsoft.AspNetCore.Hosting.Server;
-using WebAPI.Extenstions;
-using WebAPI.Infrastructure;
+﻿using Microsoft.AspNetCore.Hosting.Server;
+using PassR.Application.Abstractions;
+using PassR.Application.Messaging;
+using PassR.Domain.Abstractions;
+using PassR.WebAPI.Extenstions;
+using PassR.WebAPI.Infrastructure;
 
-namespace WebAPI.Endpoints.PassRTests
+namespace PassR.WebAPI.Endpoints.PassRTests
 {
     public class PostTest : IEndpoint
     {
@@ -19,7 +18,7 @@ namespace WebAPI.Endpoints.PassRTests
                 IPassR sender,
                 CancellationToken cancellationToken) =>
             {
-                var query = new GetLoggedInUserQuery(); // assumes this is a parameterless query
+                var query = new GetLoggedInUserQuery();
 
                 var result = await sender.SendAsync(query, cancellationToken);
 

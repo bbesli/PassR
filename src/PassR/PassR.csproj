@@ -1,0 +1,46 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <ApplicationIcon>passr.ico</ApplicationIcon>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageProjectUrl></PackageProjectUrl>
+    <PackageIcon>passr.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <RepositoryUrl>https://github.com/bbesli/PassR</RepositoryUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
+    <Title></Title>
+    <PackageId>Verbytes.$(AssemblyName)</PackageId>
+    <Authors>Verbytes</Authors>
+    <Company>Verbytes</Company>
+    <Product>Verbytes.$(AssemblyName)</Product>
+    <Description>PassR is a lightweight mediator library for .NET applications. It supports request/response handling, fire-and-forget notifications, and pipeline behaviors for cross-cutting concerns like logging, validation, and caching — all designed with Clean Architecture in mind.</Description>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="passr.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="C:\Users\TR\Downloads\passr.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Application\PassR.Application.csproj" />
+    <ProjectReference Include="..\Domain\PassR.Domain.csproj" />
+    <ProjectReference Include="..\Infrastructure\PassR.Infrastructure.csproj" />
+  </ItemGroup>
+
+</Project>
