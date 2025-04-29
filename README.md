@@ -19,7 +19,7 @@ Inspired by MediatR, PassR adds support for:
 ## 📦 Installation
 
 ```bash
-dotnet add package PassR
+dotnet add package Verbytes.PassR
 ```
 
 ---

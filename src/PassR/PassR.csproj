@@ -20,6 +20,7 @@
     <Product>Verbytes.$(AssemblyName)</Product>
     <Description>PassR is a lightweight mediator library for .NET applications. It supports request/response handling, fire-and-forget notifications, and pipeline behaviors for cross-cutting concerns like logging, validation, and caching — all designed with Clean Architecture in mind.</Description>
     <RepositoryType>git</RepositoryType>
+    <Version>1.0.1</Version>
   </PropertyGroup>
 
   <ItemGroup>
