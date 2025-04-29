@@ -26,15 +26,35 @@ dotnet add package Verbytes.PassR
 
 ## 🛠 Setup
 
-Register PassR in your `Program.cs`:
+Register PassR and presentation services in your `Program.cs`:
 
 ```csharp
+var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddPresentation();
 builder.Services.AddPassR(options =>
 {
     options.RegisterServicesFromAssembly(typeof(CreateUserCommandHandler).Assembly);
     options.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
+builder.Services.AddEndpoints(typeof(IEndpoint).Assembly);
 ```
+
+---
+
+## 🛣️ API Pipeline Bootstrapping
+
+You can set up the full API versioning + exception handler + Swagger pipeline with a single method:
+
+```csharp
+app.UsePassRPresentation(version: 1, endpointAssembly: typeof(IEndpoint).Assembly);
+```
+
+This configures:
+- API versioning using route segments (`/api/v1/...`)
+- Swagger UI with support for multiple versions
+- Automatic endpoint discovery via `IEndpoint` implementations
+- Custom exception middleware with problem response output
 
 ---
 
@@ -54,7 +74,7 @@ public class GetUserQueryHandler : IQueryHandler<GetUserQuery, UserDto>
     public async ValueTask<Result<UserDto>> HandleAsync(GetUserQuery request, CancellationToken cancellationToken)
     {
         // simulate user retrieval
-        return Result.Success(new UserDto(request.UserId, "deniz@example.com"));
+        return Result.Success(new UserDto(request.UserId, "burak@example.com"));
     }
 }
 ```
@@ -108,15 +128,6 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
     }
 }
 ```
-
----
-
-## 💡 Design Philosophy
-
-- Separation of concerns
-- Minimal magic, maximum flexibility
-- Strong typing over string keys or attributes
-- Developer-friendly — predictable structure, IDE-friendly IntelliSense
 
 ---
 
