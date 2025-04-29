@@ -10,7 +10,8 @@ namespace WebAPI.Endpoints.PassRTests
 {
     public class PostTest : IEndpoint
     {
-        public record GetLoggedInUserQuery() : IQuery<Result>;
+        public record GetLoggedInUserQuery() : IQuery<UserDto>;
+        public record UserDto(Guid Id, string Name);
 
         public void MapEndpoint(IEndpointRouteBuilder app)
         {
@@ -27,12 +28,11 @@ namespace WebAPI.Endpoints.PassRTests
             .WithTags(Tags.Tests);
         }
 
-        public class GetLoggedInUserQueryHandler : IQueryHandler<GetLoggedInUserQuery, Result>
+        public class GetLoggedInUserQueryHandler : IQueryHandler<GetLoggedInUserQuery, UserDto>
         {
-            ValueTask<Result<Result>> IRequestHandler<GetLoggedInUserQuery, Result<Result>>.HandleAsync(GetLoggedInUserQuery request, CancellationToken cancellationToken)
+            public ValueTask<Result<UserDto>> HandleAsync(GetLoggedInUserQuery request, CancellationToken cancellationToken)
             {
-                // Simulate returning a logged-in user
-                var user = new { Id = Guid.NewGuid(), Name = "DemoUser" };
+                var user = new UserDto(Guid.NewGuid(), "DemoUser");
                 return ValueTask.FromResult(Result.Success(user));
             }
         }
