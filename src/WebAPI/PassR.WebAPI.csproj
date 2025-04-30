@@ -11,8 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Application\PassR.Application.csproj" />
-    <ProjectReference Include="..\Infrastructure\PassR.Infrastructure.csproj" />
+    <ProjectReference Include="..\PassR\PassR.csproj" />
   </ItemGroup>
 
 </Project>

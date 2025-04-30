@@ -37,7 +37,7 @@ builder.Services.AddPassR(options =>
     options.RegisterServicesFromAssembly(typeof(CreateUserCommandHandler).Assembly);
     options.AddOpenBehavior(typeof(LoggingBehavior<,>));
 });
-builder.Services.AddEndpoints(typeof(IEndpoint).Assembly);
+builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
 ```
 
 ---
@@ -47,6 +47,8 @@ builder.Services.AddEndpoints(typeof(IEndpoint).Assembly);
 You can set up the full API versioning + exception handler + Swagger pipeline with a single method:
 
 ```csharp
+var app = builder.Build();
+ 
 app.UsePassRPresentation(version: 1, endpointAssembly: typeof(IEndpoint).Assembly);
 ```
 

@@ -1,6 +1,7 @@
 using System.Reflection;
-using PassR.Infrastructure.Mediator;
-using PassR.WebAPI.Extenstions;
+using PassR.Mediator;
+using PassR.Utilities.Endpoints;
+using PassR.Utilities.Extensions;
 
 internal class Program
 {
@@ -11,40 +12,18 @@ internal class Program
         // Add services to the container.
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         builder.Services.AddOpenApi();
+        builder.Logging.AddConsole();
 
-        builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
+        builder.Services.AddPresentation();
         builder.Services.AddPassR();
+        builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
+
 
         var app = builder.Build();
 
-        app.MapEndpoints();
-
-        // Configure the HTTP request pipeline.
-        if (app.Environment.IsDevelopment())
-        {
-            app.MapOpenApi();
-        }
+        app.UsePassRPresentation(version: 1, endpointAssembly: Assembly.GetExecutingAssembly());
 
         app.UseHttpsRedirection();
-
-        var summaries = new[]
-        {
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
-
-        app.MapGet("/weatherforecast", () =>
-        {
-            var forecast = Enumerable.Range(1, 5).Select(index =>
-                new WeatherForecast
-                (
-                    DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-                    Random.Shared.Next(-20, 55),
-                    summaries[Random.Shared.Next(summaries.Length)]
-                ))
-                .ToArray();
-            return forecast;
-        })
-        .WithName("GetWeatherForecast");
 
         app.Run();
     }

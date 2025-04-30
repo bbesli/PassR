@@ -1,7 +1,8 @@
 ﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.AspNetCore.Mvc.ApiExplorer;
-using Microsoft.Extensions.DependencyInjection;
 using PassR.Utilities.Middleware;
+using Asp.Versioning.ApiExplorer;
+using Microsoft.Extensions.DependencyInjection;
+
 
 namespace PassR.Utilities.Extensions
 {
@@ -21,19 +22,17 @@ namespace PassR.Utilities.Extensions
         /// </summary>
         /// <param name="app">The application builder used to configure middleware.</param>
         /// <returns>The updated <see cref="IApplicationBuilder"/> instance.</returns>
-        public static IApplicationBuilder UseSwaggerWithUi(this IApplicationBuilder app)
+        public static IApplicationBuilder UseSwaggerWithUi(this WebApplication app)
         {
-            var webApp = (WebApplication)app;
-
-            var apiVersionDescriptionProvider = webApp.Services.GetRequiredService<IApiVersionDescriptionProvider>();
-
-            webApp.UseSwagger();
-            webApp.UseSwaggerUI(options =>
+            app.UseSwagger();
+            app.UseSwaggerUI(options =>
             {
-                foreach (var description in apiVersionDescriptionProvider.ApiVersionDescriptions)
+                IReadOnlyList<ApiVersionDescription> descriptions = app.DescribeApiVersions();
+
+                foreach (ApiVersionDescription description in descriptions)
                 {
-                    var url = $"/swagger/{description.GroupName}/swagger.json";
-                    var name = description.GroupName.ToUpperInvariant();
+                    string url = $"/swagger/{description.GroupName}/swagger.json";
+                    string name = description.GroupName.ToUpperInvariant();
 
                     options.SwaggerEndpoint(url, name);
                 }

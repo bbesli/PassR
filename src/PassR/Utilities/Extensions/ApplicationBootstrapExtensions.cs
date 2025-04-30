@@ -1,5 +1,7 @@
 ﻿using Asp.Versioning;
+using Asp.Versioning.Builder;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Hosting;
 using System.Reflection;
 
@@ -15,8 +17,17 @@ public static class ApplicationBootstrapExtensions
     /// <param name="endpointAssembly">The assembly to scan for endpoint classes.</param>
     public static void UsePassRPresentation(this WebApplication app, int version, Assembly endpointAssembly)
     {
-        // Global exception handling
-        app.UseCustomExceptionHandler();
+        // Configure versioned endpoint group
+        ApiVersionSet apiVersionSet = app.NewApiVersionSet()
+            .HasApiVersion(new ApiVersion(1))
+            .ReportApiVersions()
+            .Build();
+
+        RouteGroupBuilder versionedGroup = app
+            .MapGroup("api/v{version:apiVersion}")
+            .WithApiVersionSet(apiVersionSet);
+
+        app.MapEndpoints(versionedGroup);
 
         // Swagger + versioned UI
         if (app.Environment.IsDevelopment())
@@ -26,16 +37,7 @@ public static class ApplicationBootstrapExtensions
 
         app.UseHttpsRedirection();
 
-        // Configure versioned endpoint group
-        var apiVersionSet = app.NewApiVersionSet()
-            .HasApiVersion(new ApiVersion(version))
-            .ReportApiVersions()
-            .Build();
-
-        var versionedGroup = app
-            .MapGroup($"api/v{{version:apiVersion}}")
-            .WithApiVersionSet(apiVersionSet);
-
-        app.MapEndpoints(versionedGroup);
+        // Global exception handling
+        app.UseCustomExceptionHandler();
     }
 }

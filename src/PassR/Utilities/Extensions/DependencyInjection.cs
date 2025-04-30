@@ -22,26 +22,27 @@ namespace PassR.Utilities.Extensions
             services.AddAuthorization();
 
             services.AddEndpointsApiExplorer();
-            services.AddSwaggerGen();
 
-            services.AddHttpContextAccessor();
-
-            // REMARK: If you want to use Controllers, uncomment this.
-            // services.AddControllers();
-
-            services.AddProblemDetails();
-
+            // Configure API versioning FIRST
             services.AddApiVersioning(options =>
             {
                 options.DefaultApiVersion = new ApiVersion(1);
                 options.ApiVersionReader = new UrlSegmentApiVersionReader();
-            }).AddApiExplorer(options =>
+                options.ReportApiVersions = true;
+                options.AssumeDefaultVersionWhenUnspecified = true;
+            })
+            .AddApiExplorer(options =>
             {
                 options.GroupNameFormat = "'v'V";
                 options.SubstituteApiVersionInUrl = true;
             });
 
+            // ✅ Configure Swagger AFTER versioning
+            services.AddSwaggerGen();
             services.ConfigureOptions<ConfigureSwaggerGenOptions>();
+
+            services.AddHttpContextAccessor();
+            services.AddProblemDetails();
 
             return services;
         }

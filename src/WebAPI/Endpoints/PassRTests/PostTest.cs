@@ -1,9 +1,9 @@
-﻿using Microsoft.AspNetCore.Hosting.Server;
-using PassR.Application.Abstractions;
-using PassR.Application.Messaging;
-using PassR.Domain.Abstractions;
-using PassR.WebAPI.Extenstions;
-using PassR.WebAPI.Infrastructure;
+﻿
+using PassR.Abstractions;
+using PassR.Messaging;
+using PassR.Utilities.Endpoints;
+using PassR.Utilities.Extensions;
+using PassR.Utilities.Infrastructure;
 
 namespace PassR.WebAPI.Endpoints.PassRTests
 {
