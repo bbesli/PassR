@@ -26,7 +26,6 @@ namespace PassR.Utilities.Extensions
             // Configure API versioning FIRST
             services.AddApiVersioning(options =>
             {
-                options.DefaultApiVersion = new ApiVersion(1);
                 options.ApiVersionReader = new UrlSegmentApiVersionReader();
                 options.ReportApiVersions = true;
                 options.AssumeDefaultVersionWhenUnspecified = true;

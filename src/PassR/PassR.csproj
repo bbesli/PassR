@@ -4,16 +4,12 @@
     <TargetFramework>net9.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <ApplicationIcon>passr.ico</ApplicationIcon>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
-    <PackageProjectUrl></PackageProjectUrl>
-    <PackageIcon>passr.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <RepositoryUrl>https://github.com/bbesli/PassR</RepositoryUrl>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>False</PackageRequireLicenseAcceptance>
-    <Title></Title>
     <PackageId>Verbytes.$(AssemblyName)</PackageId>
     <Authors>Verbytes</Authors>
     <Company>Verbytes</Company>
@@ -24,15 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="passr.ico" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="..\..\README.md">
-      <Pack>True</Pack>
-      <PackagePath>\</PackagePath>
-    </None>
-    <None Include="C:\Users\TR\Downloads\passr.png">
       <Pack>True</Pack>
       <PackagePath>\</PackagePath>
     </None>

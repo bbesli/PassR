@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using PassR.Utilities.Endpoints;
 using System.Reflection;
+using PassR.Utilities.Attributes;
 
 namespace PassR.Utilities.Extensions
 {
@@ -57,6 +58,33 @@ namespace PassR.Utilities.Extensions
             }
 
             return app;
+        }
+
+        /// <summary>
+        /// Maps only those <see cref="IEndpoint"/> instances that are annotated with a specific <see cref="ApiVersionAttribute"/>
+        /// matching the provided API version. This allows endpoints to be grouped and versioned dynamically at runtime.
+        /// </summary>
+        /// <param name="app">The <see cref="WebApplication"/> instance.</param>
+        /// <param name="group">The route group to which endpoints will be mapped.</param>
+        /// <param name="version">The API version to filter endpoint classes by.</param>
+        public static void MapEndpointsByVersion(
+            this WebApplication app,
+            RouteGroupBuilder group,
+            Asp.Versioning.ApiVersion version)
+        {
+            var endpoints = app.Services
+                .GetRequiredService<IEnumerable<IEndpoint>>()
+                .Where(e =>
+                {
+                    var type = e.GetType();
+                    var versions = type.GetCustomAttributes<ApiVersionAttribute>();
+                    return versions.Any(v => v.Version == version.MajorVersion);
+                });
+
+            foreach (var endpoint in endpoints)
+            {
+                endpoint.MapEndpoint(group);
+            }
         }
 
         /// <summary>

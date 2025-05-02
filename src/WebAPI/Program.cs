@@ -18,13 +18,10 @@ internal class Program
         builder.Services.AddPassR();
         builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
 
-
         var app = builder.Build();
 
-        app.UsePassRPresentation(version: 1, endpointAssembly: Assembly.GetExecutingAssembly());
-
-        app.UseHttpsRedirection();
-
+        app.UsePassRPresentation(endpointAssembly: Assembly.GetExecutingAssembly());
+        
         app.Run();
     }
 }

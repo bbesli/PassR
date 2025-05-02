@@ -49,7 +49,7 @@ You can set up the full API versioning + exception handler + Swagger pipeline wi
 ```csharp
 var app = builder.Build();
  
-app.UsePassRPresentation(version: 1, endpointAssembly: typeof(IEndpoint).Assembly);
+app.UsePassRPresentation(endpointAssembly: typeof(IEndpoint).Assembly);
 ```
 
 This configures:
@@ -130,6 +130,43 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
     }
 }
 ```
+
+---
+
+## 🔀 Built-in Minimal API Versioning with Swagger UI
+
+PassR now supports **automatic API versioning** for Minimal APIs with seamless Swagger integration.
+
+### ✅ Features
+- Annotate your endpoint class with `[ApiVersion(x)]` (e.g. `[ApiVersion(2)]`)
+- PassR dynamically detects all versions (v1, v2, v3...) without hardcoding
+- Endpoints are grouped under `/api/v{version}` automatically
+- Swagger UI displays version tabs for each registered version
+
+### 🚀 Example
+
+```csharp
+[ApiVersion(2)]
+public class PostTestV2 : IEndpoint
+{
+    public void MapEndpoint(IEndpointRouteBuilder app)
+    {
+        app.MapPost("PostTest", ...)
+            .WithTags("Tests")
+    }
+}
+```
+
+No need to configure versions manually. Just use:
+
+```csharp
+
+var app = builder.Build();
+
+app.UsePassRPresentation(Assembly.GetExecutingAssembly());
+```
+
+Enjoy fully dynamic, scalable API versioning with clean Swagger support.
 
 ---
 
