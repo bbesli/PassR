@@ -16,8 +16,14 @@
     <Product>Verbytes.$(AssemblyName)</Product>
     <Description>PassR is a lightweight mediator library for .NET applications. It supports request/response handling, fire-and-forget notifications, and pipeline behaviors for cross-cutting concerns like logging, validation, and caching — all designed with Clean Architecture in mind.</Description>
     <RepositoryType>git</RepositoryType>
-    <Version>1.0.3</Version>
+    <Version>1.1.4</Version>
+    <ApplicationIcon>Resources\passr.ico</ApplicationIcon>
+    <PackageIcon>Resources\passr.png</PackageIcon>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Content Include="Resources\passr.ico" />
+  </ItemGroup>
 
   <ItemGroup>
     <None Include="..\..\README.md">
@@ -31,13 +37,19 @@
     <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Mvc.Versioning.ApiExplorer" Version="5.1.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="8.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="8.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerUI" Version="8.1.1" />
 	<FrameworkReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Resources\passr.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
