@@ -16,7 +16,7 @@ internal class Program
 
         builder.Services.AddPresentation();
         builder.Services.AddPassR();
-        builder.Services.AddEndpoints(Assembly.GetExecutingAssembly());
+        builder.Services.AddPassREndpoints(Assembly.GetExecutingAssembly());
 
         var app = builder.Build();
 

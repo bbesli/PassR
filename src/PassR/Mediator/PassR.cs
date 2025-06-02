@@ -27,25 +27,45 @@ namespace PassR.Mediator
         }
 
         /// <inheritdoc />
-        public async ValueTask<TResponse> SendAsync<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
+        public async ValueTask<TResponse> SendAsync<TResponse>(
+            IRequest<TResponse> request,
+            CancellationToken cancellationToken = default)
         {
-            var handlerType = typeof(IRequestHandler<,>).MakeGenericType(request.GetType(), typeof(TResponse));
+            var requestType = request.GetType();
+            var responseType = typeof(TResponse);
+
+            // Resolve the concrete handler type
+            var handlerType = typeof(IRequestHandler<,>).MakeGenericType(requestType, responseType);
             var handler = _serviceProvider.GetRequiredService(handlerType);
 
-            var behaviors = _serviceProvider
-                .GetServices(typeof(IPipelineBehavior<,>).MakeGenericType(request.GetType(), typeof(TResponse)))
-                .Cast<dynamic>().Reverse().ToList();
+            RequestHandlerDelegate<TResponse> handlerDelegate = async () =>
+            {
+                var method = handlerType.GetMethod("HandleAsync");
+                if (method is null)
+                    throw new InvalidOperationException($"Method 'HandleAsync' not found on handler '{handler.GetType().Name}'.");
 
-            RequestHandlerDelegate<TResponse> handlerDelegate = () => ((dynamic)handler).HandleAsync((dynamic)request, cancellationToken);
+                var task = (ValueTask<TResponse>)method.Invoke(handler, new object[] { request, cancellationToken })!;
+                return await task;
+            };
+
+            var pipelineType = typeof(IPipelineBehavior<,>).MakeGenericType(requestType, responseType);
+            var behaviors = _serviceProvider.GetServices(pipelineType).Reverse().ToList();
 
             foreach (var behavior in behaviors)
             {
+                var method = pipelineType.GetMethod("HandleAsync");
                 var next = handlerDelegate;
-                handlerDelegate = () => behavior.HandleAsync((dynamic)request, cancellationToken, next);
+
+                handlerDelegate = async () =>
+                {
+                    var result = method!.Invoke(behavior, new object[] { request, next, cancellationToken });
+                    return await (ValueTask<TResponse>)result!;
+                };
             }
 
             return await handlerDelegate();
         }
+
 
         /// <inheritdoc />
         public async ValueTask PublishAsync<TNotification>(TNotification notification, CancellationToken cancellationToken = default)

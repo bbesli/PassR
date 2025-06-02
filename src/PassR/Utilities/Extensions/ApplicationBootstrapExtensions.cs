@@ -1,8 +1,9 @@
-﻿using System.Reflection;
-using Asp.Versioning;
+﻿using Asp.Versioning;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using PassR.Utilities.Endpoints;
+using System.Reflection;
 
 namespace PassR.Utilities.Extensions;
 
@@ -28,42 +29,43 @@ public static class ApplicationBootstrapExtensions
     /// </remarks>
     public static void UsePassRPresentation(this WebApplication app, Assembly endpointAssembly)
     {
-        // Discover API versions from endpoint class attributes
-        var versionTypes = endpointAssembly
-            .DefinedTypes
-            .Where(t => typeof(IEndpoint).IsAssignableFrom(t) && !t.IsAbstract)
-            .SelectMany(t => t.GetCustomAttributes<PassR.Utilities.Attributes.ApiVersionAttribute>())
+        // 1. Discover all registered IEndpoint instances from DI
+        var allEndpoints = app.Services.GetRequiredService<IEnumerable<IEndpoint>>();
+
+        // 2. Extract distinct ApiVersions
+        var versionTypes = allEndpoints
+            .SelectMany(e => e.GetType().GetCustomAttributes<PassR.Utilities.Attributes.ApiVersionAttribute>())
             .Select(a => new ApiVersion(a.Version))
             .Distinct()
             .OrderBy(v => v.MajorVersion)
             .ToList();
 
-        // Register all discovered versions
-        var apiVersionSet = app.NewApiVersionSet()
+        // 3. Register all discovered versions into ApiVersionSet
+        var apiVersionSetBuilder = app.NewApiVersionSet()
             .ReportApiVersions();
 
-        foreach (var v in versionTypes)
-            apiVersionSet.HasApiVersion(v);
+        foreach (var version in versionTypes)
+            apiVersionSetBuilder.HasApiVersion(version);
 
-        var builtApiVersionSet = apiVersionSet.Build();
+        var builtApiVersionSet = apiVersionSetBuilder.Build();
 
-        // Map endpoints grouped by version
+        // 4. Map endpoints by version
         foreach (var version in versionTypes)
         {
-            var versionedGroup = app 
-                .MapGroup("api/v{version:apiVersion}")
+            var versionedGroup = app
+                .MapGroup("/api/v{version:apiVersion}")
                 .WithApiVersionSet(builtApiVersionSet)
                 .HasApiVersion(version);
 
             app.MapEndpointsByVersion(versionedGroup, version);
         }
 
-        // Enable Swagger UI only in development
+        // 5. Swagger + middleware
         if (app.Environment.IsDevelopment())
         {
             app.UseSwaggerWithUi();
         }
-        
+
         app.UseHttpsRedirection();
         app.UseCustomExceptionHandler();
     }

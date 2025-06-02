@@ -40,6 +40,11 @@ namespace PassR.Mediator
 
             foreach (var type in assemblies.SelectMany(a => a.GetTypes()))
             {
+                if (type.IsAbstract || type.IsInterface)
+                {
+                    continue;
+                }
+
                 foreach (var iface in type.GetInterfaces())
                 {
                     if (iface.IsGenericType &&
@@ -53,8 +58,17 @@ namespace PassR.Mediator
 
             foreach (var openBehavior in options.OpenBehaviors)
             {
-                var definition = openBehavior.IsGenericType ? openBehavior.GetGenericTypeDefinition() : openBehavior;
-                services.Add(new ServiceDescriptor(typeof(IPipelineBehavior<,>), definition, options.HandlerLifetime));
+                var definition = openBehavior.IsGenericType
+                    ? openBehavior.GetGenericTypeDefinition()
+                    : openBehavior;
+
+                var behaviorInterfaces = definition.GetInterfaces()
+                    .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IPipelineBehavior<,>));
+
+                if (behaviorInterfaces.Any())
+                {
+                    services.Add(new ServiceDescriptor(typeof(IPipelineBehavior<,>), definition, options.HandlerLifetime));
+                }
             }
 
             return services;

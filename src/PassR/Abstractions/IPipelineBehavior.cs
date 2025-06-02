@@ -16,13 +16,13 @@
         /// Handles the given request and optionally executes logic before or after the next step in the pipeline.
         /// </summary>
         /// <param name="request">The incoming request object.</param>
-        /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
         /// <param name="next">The delegate representing the next step in the pipeline (usually the request handler).</param>
+        /// <param name="cancellationToken">A token to observe while waiting for the task to complete.</param>
         /// <returns>A task that returns the response from the pipeline.</returns>
         ValueTask<TResponse> HandleAsync(
-            TRequest request, 
-            CancellationToken cancellationToken, 
-            RequestHandlerDelegate<TResponse> next);
+            TRequest request,
+            RequestHandlerDelegate<TResponse> next,
+            CancellationToken cancellationToken = default);
     }
 
     /// <summary>

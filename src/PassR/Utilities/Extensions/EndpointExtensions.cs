@@ -21,7 +21,7 @@ namespace PassR.Utilities.Extensions
         /// <param name="services">The service collection to register endpoints into.</param>
         /// <param name="assembly">The assembly to scan for endpoint implementations.</param>
         /// <returns>The updated <see cref="IServiceCollection"/>.</returns>
-        public static IServiceCollection AddEndpoints(this IServiceCollection services, Assembly assembly)
+        public static IServiceCollection AddPassREndpoints(this IServiceCollection services, Assembly assembly)
         {
             ServiceDescriptor[] serviceDescriptors = assembly
                 .DefinedTypes

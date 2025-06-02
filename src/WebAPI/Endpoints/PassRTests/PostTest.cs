@@ -1,10 +1,10 @@
 ﻿
 using PassR.Abstractions;
-using PassR.Messaging;
 using PassR.Utilities.Attributes;
 using PassR.Utilities.Endpoints;
 using PassR.Utilities.Extensions;
 using PassR.Utilities.Infrastructure;
+using PassR.WebAPI.Messaging;
 
 namespace PassR.WebAPI.Endpoints.PassRTests
 {
