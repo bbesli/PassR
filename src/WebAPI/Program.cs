@@ -11,7 +11,7 @@ internal class Program
 
         // Add services to the container.
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
-        builder.Services.AddOpenApi();
+        //builder.Services.AddOpenApi();
         builder.Logging.AddConsole();
 
         builder.Services.AddPresentation();
@@ -20,7 +20,7 @@ internal class Program
 
         var app = builder.Build();
 
-        app.UsePassRPresentation(endpointAssembly: Assembly.GetExecutingAssembly());
+        app.UsePassRPresentation(endpointAssembly: Assembly.GetExecutingAssembly(), useSwagger: true);
         
         app.Run();
     }

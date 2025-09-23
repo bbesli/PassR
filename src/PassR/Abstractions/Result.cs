@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
+using System.Text.Json.Serialization;
 
 namespace PassR.Abstractions
 {
@@ -26,7 +27,6 @@ namespace PassR.Abstractions
             {
                 throw new InvalidOperationException();
             }
-
             if (!isSuccess && error == Error.None)
             {
                 throw new InvalidOperationException();
@@ -39,17 +39,50 @@ namespace PassR.Abstractions
         /// <summary>
         /// Gets a value indicating whether the result represents success.
         /// </summary>
+        [JsonPropertyName("IsSuccessful")]
         public bool IsSuccess { get; }
 
         /// <summary>
         /// Gets a value indicating whether the result represents failure.
         /// </summary>
+        [JsonIgnore]
         public bool IsFailure => !IsSuccess;
 
         /// <summary>
         /// Gets the associated error, if any.
         /// </summary>
+        [JsonIgnore]
         public Error Error { get; }
+
+        /// <summary>
+        /// Gets the error message for JSON serialization, compatible with APIResponse format.
+        /// </summary>
+        [JsonPropertyName("ErrorMessage")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public virtual string? ErrorMessage => IsSuccess ? null : Error?.Description;
+
+        /// <summary>
+        /// Gets the exception for JSON serialization, compatible with APIResponse format.
+        /// Always null in this implementation as we use Error instead.
+        /// </summary>
+        [JsonPropertyName("Exception")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public virtual Exception? Exception => null;
+
+        /// <summary>
+        /// Gets the result data for JSON serialization, compatible with APIResponse format.
+        /// Always null for non-generic Result.
+        /// </summary>
+        [JsonPropertyName("Result")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public virtual object? ResultData => null;
+
+        /// <summary>
+        /// Gets the cached data indicator for JSON serialization, compatible with APIResponse format.
+        /// Always false in this implementation.
+        /// </summary>
+        [JsonPropertyName("IsCachedData")]
+        public virtual bool? IsCachedData => false;
 
         /// <summary>
         /// Creates a successful <see cref="Result"/>.
@@ -104,8 +137,7 @@ namespace PassR.Abstractions
         /// <param name="value">The success value.</param>
         /// <param name="isSuccess">Indicates whether the operation was successful.</param>
         /// <param name="error">The error associated with the result.</param>
-        public Result(TValue? value, bool isSuccess, Error error)
-            : base(isSuccess, error)
+        public Result(TValue? value, bool isSuccess, Error error) : base(isSuccess, error)
         {
             _value = value;
         }
@@ -115,9 +147,16 @@ namespace PassR.Abstractions
         /// Throws an exception if accessed on a failed result.
         /// </summary>
         [NotNull]
-        public TValue Value => IsSuccess
-            ? _value!
-            : throw new InvalidOperationException("The value of a failure result cannot be accessed.");
+        [JsonIgnore]
+        public TValue Value => IsSuccess ? _value! :
+            throw new InvalidOperationException("The value of a failure result cannot be accessed.");
+
+        /// <summary>
+        /// Gets the result data for JSON serialization, compatible with APIResponse format.
+        /// </summary>
+        [JsonPropertyName("Result")]
+        [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)]
+        public override object? ResultData => IsSuccess ? _value : null;
 
         /// <summary>
         /// Implicitly creates a successful <see cref="Result{TValue}"/> from a non-null value.

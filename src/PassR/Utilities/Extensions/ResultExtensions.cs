@@ -1,4 +1,5 @@
 ﻿using PassR.Abstractions;
+using Microsoft.AspNetCore.Http;
 
 namespace PassR.Utilities.Extensions
 {
@@ -7,7 +8,7 @@ namespace PassR.Utilities.Extensions
     /// 
     /// <para>
     /// These extensions help simplify branching logic by allowing you to express success and failure
-    /// outcomes in a concise and readable manner.
+    /// outcomes in a concise and readable manner, as well as convert Results to HTTP responses.
     /// </para>
     /// </summary>
     public static class ResultExtensions
@@ -25,6 +26,14 @@ namespace PassR.Utilities.Extensions
             Func<TOut> onSuccess,
             Func<Result, TOut> onFailure)
         {
+            // Special handling for IResult return type - pass the full Result object for JSON serialization
+            if (typeof(TOut) == typeof(IResult))
+            {
+                return result.IsSuccess
+                    ? (TOut)(object)Results.Ok(result)
+                    : (TOut)(object)Results.BadRequest(result);
+            }
+
             return result.IsSuccess ? onSuccess() : onFailure(result);
         }
 
@@ -42,7 +51,17 @@ namespace PassR.Utilities.Extensions
             Func<TIn, TOut> onSuccess,
             Func<Result<TIn>, TOut> onFailure)
         {
+            // Special handling for IResult return type - pass the full Result object for JSON serialization
+            if (typeof(TOut) == typeof(IResult))
+            {
+                return result.IsSuccess
+                    ? (TOut)(object)Results.Ok(result)
+                    : (TOut)(object)Results.BadRequest(result);
+            }
+
             return result.IsSuccess ? onSuccess(result.Value) : onFailure(result);
         }
+
+
     }
 }

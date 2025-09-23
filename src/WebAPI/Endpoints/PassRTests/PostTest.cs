@@ -34,7 +34,8 @@ namespace PassR.WebAPI.Endpoints.PassRTests
             public ValueTask<Result<UserDto>> HandleAsync(GetLoggedInUserQuery request, CancellationToken cancellationToken)
             {
                 var user = new UserDto(Guid.NewGuid(), "DemoUser");
-                return ValueTask.FromResult(Result.Success(user));
+                var result = Result.Success(user);
+                return ValueTask.FromResult(result);
             }
         }
     }

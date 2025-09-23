@@ -27,7 +27,7 @@ public static class ApplicationBootstrapExtensions
     /// - Groups endpoints by version under routes like <c>/api/v{version}</c>.
     /// - Configures Swagger UI to display endpoints for each API version.
     /// </remarks>
-    public static void UsePassRPresentation(this WebApplication app, Assembly endpointAssembly)
+    public static void UsePassRPresentation(this WebApplication app, Assembly endpointAssembly, bool useSwagger = false)
     {
         // 1. Discover all registered IEndpoint instances from DI
         var allEndpoints = app.Services.GetRequiredService<IEnumerable<IEndpoint>>();
@@ -61,7 +61,7 @@ public static class ApplicationBootstrapExtensions
         }
 
         // 5. Swagger + middleware
-        if (app.Environment.IsDevelopment())
+        if (useSwagger)
         {
             app.UseSwaggerWithUi();
         }

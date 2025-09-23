@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net9.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
     <GenerateDocumentationFile>True</GenerateDocumentationFile>
@@ -16,7 +16,7 @@
     <Product>Verbytes.$(AssemblyName)</Product>
     <Description>PassR is a lightweight mediator library for .NET applications. It supports request/response handling, fire-and-forget notifications, and pipeline behaviors for cross-cutting concerns like logging, validation, and caching — all designed with Clean Architecture in mind.</Description>
     <RepositoryType>git</RepositoryType>
-    <Version>1.1.7</Version>
+    <Version>1.1.9</Version>
     <ApplicationIcon>Resources\passr.ico</ApplicationIcon>
     <PackageIcon>Resources\passr.png</PackageIcon>
   </PropertyGroup>
@@ -37,7 +37,7 @@
     <PackageReference Include="Asp.Versioning.Http" Version="8.1.0" />
     <PackageReference Include="Asp.Versioning.Mvc" Version="8.1.0" />
     <PackageReference Include="Asp.Versioning.Mvc.ApiExplorer" Version="8.1.0" />
-    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="9.0.4" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="8.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.Swagger" Version="8.1.1" />
     <PackageReference Include="Swashbuckle.AspNetCore.SwaggerGen" Version="8.1.1" />
