@@ -14,7 +14,7 @@ namespace PassR.Messaging
     /// Represents a command that performs an operation and returns a <see cref="Result{TResponse}"/>.
     /// Use this when the command needs to return data.
     /// </summary>
-    public interface ICommand<TReponse> : IRequest<Result<TReponse>>, IBaseCommand
+    public interface ICommand<TResponse> : IRequest<Result<TResponse>>, IBaseCommand
     {
     }
 

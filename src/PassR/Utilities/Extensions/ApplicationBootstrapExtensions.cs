@@ -22,6 +22,9 @@ public static class ApplicationBootstrapExtensions
     /// The assembly to scan for endpoint classes that implement <see cref="IEndpoint"/>
     /// and are annotated with <c>[ApiVersion]</c> attributes.
     /// </param>
+    /// <param name="useSwagger">
+    /// When <c>true</c>, enables Swagger UI middleware. Defaults to <c>false</c>.
+    /// </param>
     /// <remarks>
     /// - Automatically discovers all API versions used in the application.
     /// - Groups endpoints by version under routes like <c>/api/v{version}</c>.

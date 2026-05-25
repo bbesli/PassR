@@ -9,7 +9,7 @@
     /// </para>
     /// 
     /// <para>
-    /// Handlers implementing <see cref="PassR.Application.Abstractions.INotificationHandler{TNotification}"/> 
+    /// Handlers implementing <see cref="PassR.Abstractions.INotificationHandler{TNotification}"/> 
     /// can react to these notifications asynchronously.
     /// </para>
     /// </summary>

@@ -4,12 +4,8 @@ using Microsoft.AspNetCore.Http;
 namespace PassR.Utilities.Extensions
 {
     /// <summary>
-    /// Provides functional pattern-matching extensions for <see cref="Result"/> and <see cref="Result{T}"/>.
-    /// 
-    /// <para>
-    /// These extensions help simplify branching logic by allowing you to express success and failure
-    /// outcomes in a concise and readable manner, as well as convert Results to HTTP responses.
-    /// </para>
+    /// Provides functional pattern-matching extensions for <see cref="Result"/> and <see cref="Result{T}"/>,
+    /// as well as helpers to convert Results to HTTP responses.
     /// </summary>
     public static class ResultExtensions
     {
@@ -26,14 +22,6 @@ namespace PassR.Utilities.Extensions
             Func<TOut> onSuccess,
             Func<Result, TOut> onFailure)
         {
-            // Special handling for IResult return type - pass the full Result object for JSON serialization
-            if (typeof(TOut) == typeof(IResult))
-            {
-                return result.IsSuccess
-                    ? (TOut)(object)Results.Ok(result)
-                    : (TOut)(object)Results.BadRequest(result);
-            }
-
             return result.IsSuccess ? onSuccess() : onFailure(result);
         }
 
@@ -51,17 +39,34 @@ namespace PassR.Utilities.Extensions
             Func<TIn, TOut> onSuccess,
             Func<Result<TIn>, TOut> onFailure)
         {
-            // Special handling for IResult return type - pass the full Result object for JSON serialization
-            if (typeof(TOut) == typeof(IResult))
-            {
-                return result.IsSuccess
-                    ? (TOut)(object)Results.Ok(result)
-                    : (TOut)(object)Results.BadRequest(result);
-            }
-
             return result.IsSuccess ? onSuccess(result.Value) : onFailure(result);
         }
 
+        /// <summary>
+        /// Converts a non-generic <see cref="Result"/> to an <see cref="IResult"/> HTTP response.
+        /// Returns 200 OK with the serialized Result on success, or 400 BadRequest on failure.
+        /// </summary>
+        /// <param name="result">The result to convert.</param>
+        /// <returns>An <see cref="IResult"/> representing the HTTP response.</returns>
+        public static IResult ToHttpResult(this Result result)
+        {
+            return result.IsSuccess
+                ? Results.Ok(result)
+                : Results.BadRequest(result);
+        }
 
+        /// <summary>
+        /// Converts a generic <see cref="Result{TValue}"/> to an <see cref="IResult"/> HTTP response.
+        /// Returns 200 OK with the serialized Result on success, or 400 BadRequest on failure.
+        /// </summary>
+        /// <typeparam name="TValue">The type of the value in the result.</typeparam>
+        /// <param name="result">The result to convert.</param>
+        /// <returns>An <see cref="IResult"/> representing the HTTP response.</returns>
+        public static IResult ToHttpResult<TValue>(this Result<TValue> result)
+        {
+            return result.IsSuccess
+                ? Results.Ok(result)
+                : Results.BadRequest(result);
+        }
     }
 }

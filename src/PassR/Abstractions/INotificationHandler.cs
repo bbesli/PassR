@@ -25,6 +25,12 @@ namespace PassR.Abstractions
     /// </example>
     public interface INotificationHandler<TNotification> where TNotification : INotification
     {
+        /// <summary>
+        /// Handles the incoming notification asynchronously.
+        /// </summary>
+        /// <param name="notification">The notification to handle.</param>
+        /// <param name="cancellationToken">A token to observe while performing the operation.</param>
+        /// <returns>A task that completes when the handler has finished processing.</returns>
         ValueTask HandleAsync(TNotification notification, CancellationToken cancellationToken = default);
     }
 }
