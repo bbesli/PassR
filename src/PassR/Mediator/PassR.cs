@@ -66,7 +66,6 @@ namespace PassR.Mediator
             return await handlerDelegate();
         }
 
-
         /// <inheritdoc />
         public async ValueTask PublishAsync<TNotification>(TNotification notification, CancellationToken cancellationToken = default)
             where TNotification : INotification

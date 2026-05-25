@@ -3,7 +3,6 @@ using PassR.Abstractions;
 using PassR.Utilities.Attributes;
 using PassR.Utilities.Endpoints;
 using PassR.Utilities.Extensions;
-using PassR.Utilities.Infrastructure;
 using PassR.WebAPI.Messaging;
 
 namespace PassR.WebAPI.Endpoints.PassRTests
@@ -24,7 +23,7 @@ namespace PassR.WebAPI.Endpoints.PassRTests
 
                     var result = await sender.SendAsync(query, cancellationToken);
 
-                    return result.Match(Results.Ok, CustomResults.Problem);
+                    return result.ToHttpResult();
                 })
                 .WithTags(Tags.Tests);
         }
